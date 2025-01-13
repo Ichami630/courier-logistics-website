@@ -26,7 +26,6 @@ const router = createBrowserRouter(
       {/* AdminLayout Routes */}
       <Route path="/admin" element={<AdminLayout />}>
         < Route index element={<Dashboard />} />
-        <Route path='home' element={ <Dashboard /> }/>
         <Route path="*" element={<NotFound />} />
       </Route>
     </>
