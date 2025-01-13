@@ -21,7 +21,7 @@ const Navbar = ({ toggleSidebar }) => {
       {/* Right Icons */}
       <div className="flex items-center space-x-4">
         <button className="text-gray-600">
-          <FiBell size={24} />
+          <FiBell size={24} className="text-primary-100" />
         </button>
         <img
           src="https://via.placeholder.com/40"
