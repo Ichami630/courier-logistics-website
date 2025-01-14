@@ -1,10 +1,5 @@
-<?php
-echo '<h2>hello world</h2>';exit;
-header("Content-Type: application/json");
+<?php 
+$secret_key = getenv('WT_SECRET_KEY') ? : 'mySuperSecretKey123!';
 
-$response = [
-    "message" => "Welcome to the courier tracking API!",
-    "status" => 200
-];
-echo json_encode($response);
+echo '<p> hello '.$secret_key.'</p>';
 ?>

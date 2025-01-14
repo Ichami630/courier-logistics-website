@@ -12,27 +12,27 @@ const AdminLayout = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
+        <div className="flex flex-1">
+          {/* Sidebar */}
+          <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
 
-        {/* Main Content */}
-        <div className="relative flex flex-col flex-1">
-          {/* Navbar */}
-          <Navbar toggleSidebar={toggleSidebar} />
+          {/* Main Content */}
+          <div className="relative flex flex-col flex-1">
+            {/* Navbar */}
+            <Navbar toggleSidebar={toggleSidebar} />
 
-          {/* Page Content */}
-          <div
-            className="flex-1 p-6 bg-gray-100"
-            onClick={isSidebarOpen ? closeSidebar : undefined}
-          >
-            <Outlet />
+            {/* Page Content */}
+            <div
+              className="flex-1 p-6 bg-gray-100"
+              onClick={isSidebarOpen ? closeSidebar : undefined}
+            >
+              <Outlet />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <Footer />
+        {/* Footer */}
+        <Footer />
     </div>
   );
 };

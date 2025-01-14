@@ -1,6 +1,8 @@
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import AdminLayout from './layouts/AdminLayout';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import NotFound from './pages/NotFound';
 import Track from './pages/Track';
 import Home from './pages/Home';
@@ -14,14 +16,15 @@ import AllShipments from './pages/admin/AllShipments';
 import EditShipment from './pages/admin/EditShipment';
 import Setting from './pages/admin/Setting';
 
+
 // Mock authentication function
 const isAuthenticated = () => {
-  return !!localStorage.getItem('authToken'); // Replace with real authentication logic
+  return !!localStorage.getItem('token'); // Check for token
 };
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/admin/login" replace />;
+  return isAuthenticated() ? children : <Navigate to="/admin/login" replace />; // Redirect to dashbord or to login if no token
 };
 
 const router = createBrowserRouter(
@@ -61,7 +64,11 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+  <>
+    <RouterProvider router={router} />
+    <ToastContainer />
+  </>);
 };
 
 export default App;

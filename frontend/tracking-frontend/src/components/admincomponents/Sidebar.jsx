@@ -1,12 +1,32 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { MdDashboard, MdPerson, MdSettings, MdLocalShipping } from "react-icons/md";
 import { IoLogOutOutline, IoClose } from "react-icons/io5";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi"; // Dropdown icons
+import { toast } from "react-toastify";
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   // State to manage open dropdowns
   const [openDropdown, setOpenDropdown] = useState(null);
+  const navigate = useNavigate();
+
+  //display login success message
+  useEffect( () => {
+    const message = localStorage.getItem('loginMessage');
+    if(message){
+      toast.success(message);
+      setTimeout( () => localStorage.removeItem('loginMessage'), 1000)
+    }
+  }, [] );
+
+  //handle logout
+  const handleLogout = () => {
+    if(window.confirm('Are you sure you want logout?')){
+      localStorage.removeItem('token');
+      localStorage.setItem('logoutMessage','You have successfully logged out!'); //store the success message in localstorage
+      navigate('/admin/login');
+    }
+  };
 
   // Toggle dropdown menus dynamically by ID
   const toggleDropdown = (id) =>
@@ -26,7 +46,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         { id: 4.2, title: "All Shipments", path: "/admin/shipment/allshipments" },
       ],
     },
-    { id: 5, title: "Logout", icon: <IoLogOutOutline />, path: "/logout" },
+    { id: 5, title: "Logout", icon: <IoLogOutOutline />, path: "/admin/logout" },
   ];
 
   return (
@@ -87,19 +107,31 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
               </>
             ) : (
               /* Flat Item */
-              <NavLink
-                to={item.path}
-                end={item.path === "/admin"} // Use 'end' prop for exact match
-                className={({ isActive }) =>
-                  `flex items-center w-full p-4 hover:text-gray-900 ${
-                    isActive ? " text-gray-900" : ""
-                  }`
-                }
-                onClick={closeSidebar}
-              >
-                <span className="mr-4 text-xl">{item.icon}</span>
-                {item.title}
-              </NavLink>
+              <div>
+                {item.path === "/admin/logout" ? (
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center w-full p-4 hover:text-gray-900 focus:outline-none"
+                  >
+                    <span className="mr-4 text-xl">{item.icon}</span>
+                    {item.title}
+                  </button>
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    end={item.path === "/admin"} // Use 'end' prop for exact match
+                    className={({ isActive }) =>
+                      `flex items-center w-full p-4 hover:text-gray-900 ${
+                        isActive ? " text-gray-900" : ""
+                      }`
+                    }
+                    onClick={closeSidebar}
+                  >
+                    <span className="mr-4 text-xl">{item.icon}</span>
+                    {item.title}
+                  </NavLink>
+                )}
+              </div>
             )}
           </div>
         ))}
