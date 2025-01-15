@@ -11,7 +11,7 @@ const NewShipment = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800">New Shipment</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-4">New Shipment</h1>
       <ShipmentForm onSubmit={handleSubmit} isEditing={false} />
     </div>
   );
