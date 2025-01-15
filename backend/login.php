@@ -6,7 +6,6 @@ header("Access-Control-Allow-Origin: *"); // Allow all domains or replace with y
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Allow POST and OPTIONS methods
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allow necessary headers
 
-// Continue with your authentication logic
 
 require 'vendor/autoload.php';
 use Firebase\JWT\JWT;
