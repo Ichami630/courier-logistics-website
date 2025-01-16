@@ -1,15 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import ShipmentFields from './ShipmentFields';
-import Track from '../../pages/Track';
+import api from '../../utils/api';
 
 const ShipmentForm = () => {
-  const { trackingNumber } = useParams(); 
+  const { trackingNumber } = useParams();
+
+  const [shipmentTypes, setShipmentTypes] = useState([]);
+  const [shipmentModes, setShipmentModes] = useState([]);
+  const [paymentModes, setPaymentModes] = useState([]);
+  const [carriers, setCarriers] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [shipmentStatus, setShipmentStatus] = useState([]);
+
+  const [formData, setFormData] = useState({
+    trackingNumber: '',
+    shipperName: '',shipperNumber: '',shipperEmail: '',shipperAddress: '',
+    receiverName: '',receiverNumber: '',receiverEmail: '',receiverAddress: '',
+    shipmentType: '',shipmentWeight: '',shipmentPackages: '',shipmentProduct: '',
+    paymentMode: '',carrier: '',quantity: '',shipmentMode: '',origin: '',
+    destination: '',departureTime: '',pickupTime: '',pickupDate: '',comment: '',
+    historyDate: '',historyTime: '',historyLocation: '',historyStatus: '',
+  })
+
+  //handle input change
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormData((prev) => (
+      {...prev,[name]: value,}
+    ));
+  };
+
+  //handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+    try {
+      const response = await api.post('shipment.php',formData);
+      if(response.data.success){
+        toast.success(response.data.message);
+      }else{
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error Details:',error.message);
+      toast.error('An unexpected error occured');
+    }
+  };
+  //fetching predefined options from backend API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get('getvalues.php');
+        setShipmentTypes(res.data.shipmentTypes);
+        setPaymentModes(res.data.paymentModes);
+        setShipmentModes(res.data.shipmentModes);
+        setCarriers(res.data.carriers);
+        setLocations(res.data.locations);
+        setShipmentStatus(res.data.status);
+      } catch (error) {
+        console.log("Error fetching options",error);
+      }
+    };
+    fetchData();
+  },[]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-4">{trackingNumber ? 'Update Shipment': 'New Shipment'}</h1>
-      <form className="grid gap-6 lg:grid-cols-4">
+      <form className="grid gap-6 lg:grid-cols-4" onSubmit={handleSubmit}>
         {/* Main Content */}
         <div className="space-y-6 lg:col-span-3">
           {/* Tracking Number */}
@@ -17,6 +76,7 @@ const ShipmentForm = () => {
             <label className="block mb-2 text-sm font-medium text-gray-700">Tracking Number</label>
             <input
               type="text"
+              name='trackingNumber'
               value={trackingNumber || 'Auto-generated tracking number'}
               className="w-full p-2 border rounded-lg focus:outline-primary-100"
               readOnly
@@ -31,8 +91,10 @@ const ShipmentForm = () => {
                 <label className="block text-sm font-medium text-gray-700">{field.label}</label>
                 <input
                   type={field.type}
+                  name={field.name}
+                  onChange={handleChange}
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  required
+                  // required
                 />
               </div>
             ))}
@@ -46,8 +108,10 @@ const ShipmentForm = () => {
                 <label className="block text-sm font-medium text-gray-700">{field.label}</label>
                 <input
                   type={field.type}
+                  name={field.name}
+                  onChange={handleChange}
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  required
+                  // required
                 />
               </div>
             ))}
@@ -61,21 +125,34 @@ const ShipmentForm = () => {
                 <label className="block text-sm font-medium text-gray-700">{field.label}</label>
                 {field.type === "dropdown" ? (
                   <select
+                    name={field.name}
+                    onChange={handleChange}
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                    required
+                    // required
                   >
                     <option value="">Select {field.label}</option>
+                    {/* Dynamically get the corresponding state using field.table */}
+                    {Array.isArray(eval(field.table)) &&
+                      eval(field.table).map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.name}
+                        </option>
+                      ))}
                   </select>
                 ) : field.type === "textarea" ? (
                   <textarea
+                    name={field.name}
+                    onChange={handleChange}
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                    required
+                    // required
                   />
                 ) : (
                   <input
                     type={field.type}
+                    name={field.name}
+                    onChange={handleChange}
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                    required
+                    // required
                   />
                 )}
               </div>
@@ -99,16 +176,27 @@ const ShipmentForm = () => {
               <label className="block text-sm font-medium text-gray-700">{field.label}</label>
               {field.type === 'dropdown' ? (
                 <select
+                  name={field.name}
+                  onChange={handleChange}
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  required
+                  // required
                 >
                   <option value="">Select {field.label}</option>
+                  {Array.isArray(eval(field.table)) &&
+                      eval(field.table).map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.name}
+                        </option>
+                      ))
+                  }
                 </select>
               ) : (
                 <input
                   type={field.type}
+                  name={field.name}
+                  onChange={handleChange}
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  required
+                  // required
                 />
               )}
             </div>
