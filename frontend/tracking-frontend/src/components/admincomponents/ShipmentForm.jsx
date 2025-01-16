@@ -15,14 +15,36 @@ const ShipmentForm = () => {
   const [shipmentStatus, setShipmentStatus] = useState([]);
 
   const [formData, setFormData] = useState({
-    trackingNumber: '',
+    trackingNumber: trackingNumber || '',
     shipperName: '',shipperNumber: '',shipperEmail: '',shipperAddress: '',
     receiverName: '',receiverNumber: '',receiverEmail: '',receiverAddress: '',
     shipmentType: '',shipmentWeight: '',shipmentPackages: '',shipmentProduct: '',
     paymentMode: '',carrier: '',quantity: '',shipmentMode: '',origin: '',
     destination: '',departureTime: '',pickupTime: '',pickupDate: '',comment: '',
     historyDate: '',historyTime: '',historyLocation: '',historyStatus: '',
-  })
+  });
+
+  //fetch the shipment if tracking number is parse
+  useEffect(() => {
+    const fetchShipmentDetails = async () => {
+      if(trackingNumber) {
+        try {
+          const response = await api.get(`getshipment.php?trackingNumber=${trackingNumber}`);
+          if(response.data.success){
+            setFormData((prev) => ({
+              ...prev,
+              ...response.data.shipmentdetails,
+              trackingNumber, // Ensure tracking number is set
+            }));
+          }
+        } catch (error) {
+          console.log('Error while fetching shipment details:',error);
+          toast.error('Opps something when wrong while fetching shipment details');
+        }
+      }
+    };
+    fetchShipmentDetails();
+  },[trackingNumber]);
 
   //handle input change
   const handleChange = (e) => {
@@ -43,7 +65,7 @@ const ShipmentForm = () => {
         console.log(response.data.message);
       }
     } catch (error) {
-      console.error('Error Details:',error.message);
+      console.error('Error Details:',error);
       toast.error('An unexpected error occured');
     }
   };
@@ -77,7 +99,7 @@ const ShipmentForm = () => {
             <input
               type="text"
               name='trackingNumber'
-              value={trackingNumber || 'Auto-generated tracking number'}
+              value={formData.trackingNumber || 'Auto-generated tracking number'}
               className="w-full p-2 border rounded-lg focus:outline-primary-100"
               readOnly
             />
@@ -92,7 +114,9 @@ const ShipmentForm = () => {
                 <input
                   type={field.type}
                   name={field.name}
+                  value={formData[field.name] || ''}
                   onChange={handleChange}
+                  required
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
                   // required
                 />
@@ -109,7 +133,9 @@ const ShipmentForm = () => {
                 <input
                   type={field.type}
                   name={field.name}
+                  value={formData[field.name] || ''}
                   onChange={handleChange}
+                  required
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
                   // required
                 />
@@ -127,6 +153,8 @@ const ShipmentForm = () => {
                   <select
                     name={field.name}
                     onChange={handleChange}
+                    value={formData[field.name] || ''}
+                    required
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
                     // required
                   >
@@ -143,6 +171,8 @@ const ShipmentForm = () => {
                   <textarea
                     name={field.name}
                     onChange={handleChange}
+                    value={formData[field.name]}
+                    required
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
                     // required
                   />
@@ -150,6 +180,7 @@ const ShipmentForm = () => {
                   <input
                     type={field.type}
                     name={field.name}
+                    value={formData[field.name] || ''}
                     onChange={handleChange}
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
                     // required
@@ -178,6 +209,7 @@ const ShipmentForm = () => {
                 <select
                   name={field.name}
                   onChange={handleChange}
+                  required
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
                   // required
                 >

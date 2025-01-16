@@ -50,14 +50,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $location = $data['historyLocation'];
     $status = (int)$data['historyStatus'];
 
-    //generate a new tracking number
-    $trackingNumber = generateTrackingNumber($conn);
+    //if tracking update else create new
+    if(!isset($data['trackingNumber'])){
+        //generate a new tracking number
+        $trackingNumber = generateTrackingNumber($conn);
 
-    // Insert into the shipper table and get the shipper id
-    $stmt = $conn->prepare("INSERT INTO tbl_shipper (name, phone_number, email, address) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param('ssss', $shipperName, $shipperNumber, $shipperEmail, $shipperAddress);
+        // Insert into the shipper table and get the shipper id
+        $stmt = $conn->prepare("INSERT INTO tbl_shipper (name, phone_number, email, address) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param('ssss', $shipperName, $shipperNumber, $shipperEmail, $shipperAddress);
 
-    if ($stmt->execute()) {
+        if ($stmt->execute()) {
         // Get the last insert ID
         $shipper_id = $conn->insert_id;
 
@@ -96,9 +98,64 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
             exit;
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
-        exit;
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $conn->error]);
+            exit;
+        }
+    }else{
+        //we perform an update instead (note: the shipmenthistory is not updated but rather a new shipmenthistory is created for that shipment id)
+        $trackingNumber = $data['trackingNumber'];
+
+        // Fetch the shipment ID using the tracking number
+        $stmt = $conn->prepare("SELECT shipment_id FROM tbl_shipment WHERE tracking_number = ?");
+        $stmt->bind_param('s', $trackingNumber);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $shipment_id = $result->fetch_assoc()['shipment_id'];
+
+            // Update the shipper details
+            $stmt = $conn->prepare("UPDATE tbl_shipper SET name = ?, phone_number = ?, email = ?, address = ? WHERE shipper_id = (SELECT shipper_id FROM tbl_shipment WHERE tracking_number = ?)");
+            $stmt->bind_param('sssss', $shipperName, $shipperNumber, $shipperEmail, $shipperAddress, $trackingNumber);
+            if (!$stmt->execute()) {
+                echo json_encode(['success' => false, 'message' => 'Error updating shipper: ' . $stmt->error]);
+                exit;
+            }
+
+            // Update the receiver details
+            $stmt = $conn->prepare("UPDATE tbl_receiver SET name = ?, phone_number = ?, email = ?, address = ? WHERE receiver_id = (SELECT receiver_id FROM tbl_shipment WHERE tracking_number = ?)");
+            $stmt->bind_param('sssss', $receiverName, $receiverNumber, $receiverEmail, $receiverAddress, $trackingNumber);
+            if (!$stmt->execute()) {
+                echo json_encode(['success' => false, 'message' => 'Error updating receiver: ' . $stmt->error]);
+                exit;
+            }
+            // Update the shipment details
+            $stmt = $conn->prepare("
+                UPDATE tbl_shipment SET 
+                    type_id = ?, weight = ?, packages = ?, product = ?, payment_id = ?, carrier_id = ?, 
+                    quantity = ?, mode_id = ?, origin_id = ?, destination_id = ?, departure_time = ?, 
+                    pickup_time = ?, pickup_date = ?, comment = ? 
+                WHERE tracking_number = ?
+            ");
+            $stmt->bind_param('isisiiiiiisssss', 
+                $shipmentType, $weight, $packages, $product, $paymentMode, $carrier, 
+                $quantity, $shipmentMode, $origin, $destination, $departureTime, 
+                $pickTime, $pickupDate, $comment, $trackingNumber
+            );
+            if (!$stmt->execute()) {
+                echo json_encode(['success' => false, 'message' => 'Error updating shipment: ' . $stmt->error]);
+                exit;
+            }
+
+            // Insert new shipment history
+            $stmt = $conn->prepare("INSERT INTO tbl_shipmentHistory (shipment_id, status_id, location, date, time) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param('iisss', $shipment_id, $status, $location, $date, $time);
+            if (!$stmt->execute()) {
+                echo json_encode(['success' => false, 'message' => 'Error adding shipment history: ' . $stmt->error]);
+                exit;
+            }
+            echo json_encode(['success' => true, 'message' => 'Shipment updated successfully']);
+        }
     }
 }
 ?>
