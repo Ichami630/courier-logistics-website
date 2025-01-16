@@ -25,7 +25,27 @@ const AllShipments = () => {
       }
     };
     fetchAll();
-  });
+  },[]);
+
+  //delete shipment
+  const handleDelete = async (shipment_id,shipper_id,receiver_id) => {
+    try {
+      if(window.confirm("Warning!!!: Are you sure you want to delete this shipment?")){
+        const response =await api.delete('deleteshipment.php',{
+          data: {shipmentId: shipment_id,shipperId: shipper_id,receiverId:receiver_id}
+        });
+        if(response.data.success){
+          toast.success('Shipment deleted successfully');
+        }else{
+          toast.error(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.log("Error deleting shipment: ",error)
+      toast.error("Something wrong, failed to delete shipment");
+    }
+
+  }
 
   // Calculate the index range for the current page
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -58,42 +78,50 @@ const AllShipments = () => {
             </tr>
           </thead>
           <tbody>
-            {currentShipments.map((shipment) => (
-              <tr key={shipment.tracking_number} className="border-b">
-                <td className="px-4 py-3 text-sm text-gray-600">{shipment.shipperName}</td>
-                <td className="px-4 py-3 text-sm text-gray-600">{shipment.receiverName}</td>
-                <td className="px-4 py-3 text-sm text-gray-600">{shipment.tracking_number}</td>
-                <td className="px-4 py-3 text-sm text-gray-600">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      shipment.status.toLowerCase() === "pending"
-                        ? "bg-blue-100 text-blue-800"
-                        : shipment.status.toLowerCase() === "in transit"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : shipment.status.toLowerCase() === "on hold"
-                        ? "bg-orange-100 text-orange-800"
-                        : shipment.status.toLowerCase() === "delivered"
-                        ? "bg-green-100 text-green-800"
-                        : shipment.status.toLowerCase() === "cancelled"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-gray-100 text-gray-800" // Default for unknown statuses
-                    }`}
-                  >
-                    {shipment.status}
-                  </span>
-                </td>
-                <td className="flex gap-3 px-4 py-3 text-sm text-gray-600">
-                  <NavLink 
-                    to={`/admin/shipment/edit/${shipment.tracking_number}`}
-                    className="text-blue-600 hover:text-blue-800">
-                    <FaEdit />
-                  </NavLink>
-                  <button className="text-red-600 hover:text-red-800">
-                    <FaTrash />
-                  </button>
+            {currentShipments.length > 0 ? 
+              (currentShipments.map((shipment) => (
+                <tr key={shipment.shipment_id} className="border-b">
+                  <td className="px-4 py-3 text-sm text-gray-600">{shipment.shipperName}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">{shipment.receiverName}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">{shipment.tracking_number}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">
+                    <span
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        shipment.status.toLowerCase() === "pending"
+                          ? "bg-blue-100 text-blue-800"
+                          : shipment.status.toLowerCase() === "in transit"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : shipment.status.toLowerCase() === "on hold"
+                          ? "bg-orange-100 text-orange-800"
+                          : shipment.status.toLowerCase() === "delivered"
+                          ? "bg-green-100 text-green-800"
+                          : shipment.status.toLowerCase() === "cancelled"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-gray-100 text-gray-800" // Default for unknown statuses
+                      }`}
+                    >
+                      {shipment.status}
+                    </span>
+                  </td>
+                  <td className="flex gap-3 px-4 py-3 text-sm text-gray-600">
+                    <NavLink 
+                      to={`/admin/shipment/edit/${shipment.tracking_number}`}
+                      className="text-blue-600 hover:text-blue-800">
+                      <FaEdit />
+                    </NavLink>
+                    <button className="text-red-600 hover:text-red-800"
+                    onClick={() => handleDelete(shipment.shipment_id,shipment.shipper_id,shipment.receiver_id)}>
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))): (
+              <tr>
+                 <td colSpan="5" className="text-center text-red-600 py-3">
+                  ** No shipment Found **
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

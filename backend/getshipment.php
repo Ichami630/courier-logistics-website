@@ -15,7 +15,7 @@ $conn = Connection::getConnection();
 if(isset($_GET['trackingNumber'])){
 
 }else{
-    $sql = "SELECT sp.name AS shipperName,r.name AS receiverName,s.tracking_number,ss.name AS status FROM tbl_shipment s 
+    $sql = "SELECT s.shipment_id, sp.shipper_id,r.receiver_id, sp.name AS shipperName,r.name AS receiverName,s.tracking_number,ss.name AS status FROM tbl_shipment s 
         JOIN tbl_shipper sp ON s.shipper_id = sp.shipper_id 
         JOIN tbl_receiver r ON s.receiver_id = r.receiver_id 
         JOIN tbl_shipmentHistory sh ON s.shipment_id = sh.shipment_id 
