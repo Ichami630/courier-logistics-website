@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import LiveChat from '../components/LiveChat';
 
 const MainLayout = () => {
   return (
@@ -10,6 +11,7 @@ const MainLayout = () => {
         <Navbar />
         <Outlet />
         <ToastContainer />
+        <LiveChat />
         <Footer />
     </>
   )

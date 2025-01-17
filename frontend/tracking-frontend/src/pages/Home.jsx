@@ -6,12 +6,14 @@ import StatsCounter from '../components/StatsCounter'
 import WhyChooseUs from '../components/WhyChooseUs'
 import Testimonials from '../components/Testimonials'
 import Partners from '../components/Parters'
+import About from '../components/About'
 
 const Home = () => {
   return (
     <>
         <Hero />
         <InfoSection />
+        <About />
         <Services />
         <WhyChooseUs />
         <StatsCounter />
