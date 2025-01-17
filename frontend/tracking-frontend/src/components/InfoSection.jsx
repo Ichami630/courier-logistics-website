@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaClock, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
+import { FaClock, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
 
 const InfoSection = () => {
   const infoItems = [
@@ -17,9 +17,9 @@ const InfoSection = () => {
     },
     {
       id: 3,
-      icon: <FaPhoneAlt className="text-4xl text-primary-200" />,
-      title: 'Our Phone',
-      description: '+1 (800) 555-1234',
+      icon: <FaEnvelope className="text-4xl text-primary-200" />,
+      title: 'Our Contact',
+      description: 'contact@prioritymailsolutions.com',
     },
   ];
 

@@ -1,16 +1,22 @@
 import React from 'react';
-import { useState } from 'react';
-import { FaGithub,FaPhone, FaFacebook, FaLinkedinIn, FaSquareXTwitter, FaArrowUp,FaEnvelope } from 'react-icons/fa6'
+import { useRef, useState } from 'react';
+import { FaPhone,FaEnvelope } from 'react-icons/fa6'
 import { FaMapMarker } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion'
 import Banner from '../components/Banner';
+import contact from '../assets/images/contact.jpg';
+import emailjs from '@emailjs/browser';
+import Spinner from '../components/Spinner';
 const ContactUs = () => {
+    const form = useRef();
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
+        from_name: '',
+        reply_to: '',
         message: '',
-    })
+        to_name: 'PriorityMailSolutions'
+    });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const {name,value} = e.target;
@@ -19,30 +25,19 @@ const ContactUs = () => {
         })
     }
 
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
         e.preventDefault();
-        emailjs.send("service_ukzxi6j","template_kz9qnaf", {
-            from_name: formData.name,
-            to_name: 'Brandon Ichami',
-            message: formData.message,
-            from_email: formData.email,
-            reply_to: formData.email
-        }, "zzabxBmSCzZfvN7EF")
-        .then(() => {
+        setLoading(true);
+        try {
+            await emailjs.sendForm("service_ukzxi6j","template_znnk0g1",form.current, {publicKey: 'zzabxBmSCzZfvN7EF'});
             toast.success('submitted successfully!!');
-            setFormData({ name: '', email: '', message: '' });
-        })
-
-        .catch((error) => {
+        } catch (error) {
             toast.error('Error sending email. Please try again.');
             console.error(error);
-        });
-        // const {name,email,message} = formData;
-        // const newContact = {
-        //     name,
-        //     email,
-        //     message
-        // }
+        } finally{
+            setLoading(false);
+            setFormData({ name: '', email: '', message: '' });
+        }
     }
     const breadcrumb = [
         { label: 'Home', path: '/' },
@@ -50,8 +45,9 @@ const ContactUs = () => {
       ];
   return (
     <div>
+        <Spinner loading={loading} />
         <Banner
-        image='https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp'
+        image= {contact}
         title="Contact Us"
         breadcrumb={breadcrumb}
         />
@@ -100,7 +96,7 @@ const ContactUs = () => {
                 <div className='rounded-full bg-gray-400 p-2'>
                     <FaEnvelope className="text-accent-100" />
                 </div>
-                <span className="ml-2 text-neutral-600">info@usps.com</span>
+                <span className="ml-2 text-neutral-600">info@prioritymailsolutions.com</span>
             </motion.div>
 
             {/* Address */}
@@ -110,7 +106,7 @@ const ContactUs = () => {
                 <div className='rounded-full bg-gray-400 p-2'>
                     <FaMapMarker className="text-accent-100" />
                 </div>
-                <span className="ml-2 text-neutral-600">Molyko Buea, CM</span>
+                <span className="ml-2 text-neutral-600">123 Main Street, Cityville, Country</span>
             </motion.div>
 
             {/* Phone */}
@@ -120,36 +116,8 @@ const ContactUs = () => {
                 <div className='rounded-full bg-gray-400 p-2'>
                     <FaPhone className="text-accent-100" />
                 </div>
-                <span className="ml-2 text-neutral-600">(+237) 653-595-434</span>
+                <span className="ml-2 text-neutral-600">+123 456 7890</span>
             </motion.div>
-
-            {/* Social Links */}
-            {/* <div className="flex mt-4 space-x-4 text-2xl">
-                <motion.a
-                whileHover={{ scale: 1.2 }}
-                href="https://twitter.com"
-                className="transition duration-300 text-neutral-700 hover:text-neutral-500">
-                <FaSquareXTwitter />
-                </motion.a>
-                <motion.a
-                whileHover={{ scale: 1.2 }}
-                href="https://github.com"
-                className="transition duration-300 text-neutral-700 hover:text-neutral-500">
-                <FaGithub />
-                </motion.a>
-                <motion.a
-                whileHover={{ scale: 1.2 }}
-                href="https://facebook.com"
-                className="transition duration-300 text-neutral-700 hover:text-neutral-500">
-                <FaFacebook />
-                </motion.a>
-                <motion.a
-                whileHover={{ scale: 1.2 }}
-                href="https://linkedin.com"
-                className="transition duration-300 text-neutral-700 hover:text-neutral-500">
-                <FaLinkedinIn />
-                </motion.a>
-            </div> */}
             </motion.div>
 
             {/* Right Section - Form */}
@@ -161,11 +129,11 @@ const ContactUs = () => {
             viewport = {{ once: true }}
             className="w-full p-8 bg-white rounded-lg shadow-lg lg:rounded-tr-lg lg:rounded-br-lg">
                 <h2 className="mb-4 text-xl font-medium text-center text-black">Send US a Message</h2>
-                <form onSubmit={submitForm}>
+                <form ref={form} onSubmit={submitForm}>
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">Name</label>
                     <input
-                    name='name'
+                    name='from_name'
                     onChange={handleChange}
                     type="text"
                     className="w-full p-2 mt-1 text-black border rounded focus:outline-none focus:ring-2 focus:ring-secondary-300"
@@ -175,13 +143,14 @@ const ContactUs = () => {
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">Email</label>
                     <input
-                    name='email'
+                    name='reply_to'
                     onChange={handleChange}
                     type="email"
                     className="w-full p-2 mt-1 text-black border rounded focus:outline-none focus:ring-2 focus:ring-secondary-300"
                     placeholder="Your Email"
                     />
                 </div>
+                <input type="hidden" name="to_name" />
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">Message</label>
                     <textarea

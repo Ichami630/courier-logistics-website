@@ -1,17 +1,19 @@
 import React from 'react';
-
+import usps from '../assets/images/usps.png'
+import ups from '../assets/images/ups.jpeg';
+import fedex from '../assets/images/fedex.jpeg';
+import dhl from '../assets/images/dhl.jpeg';
 const Partners = () => {
   const partners = [
-    { id: 1, name: 'UPS', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/UPS_Logo_Shield_2017.svg/800px-UPS_Logo_Shield_2017.svg.png' },
-    { id: 2, name: 'USPS', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/USPS_logo.svg/1024px-USPS_logo.svg.png' },
-    { id: 3, name: 'FedEx', logo: 'https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp' },
-    { id: 4, name: 'DHL', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/DHL_Logo.svg/1024px-DHL_Logo.svg.png' },
+    { id: 1, name: 'UPS', logo: ups },
+    { id: 2, name: 'USPS', logo: usps },
+    { id: 3, name: 'FedEx', logo: fedex },
+    { id: 4, name: 'DHL', logo: dhl },
   ];
 
   return (
-    <div className="bg-gray-50 py-12">
+    <div className="bg-transparent py-12">
       <div className="container mx-auto px-5 text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8">Our Trusted Partners</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
           {partners.map((partner) => (
             <div

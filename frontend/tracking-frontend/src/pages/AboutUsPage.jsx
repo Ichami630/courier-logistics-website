@@ -1,5 +1,8 @@
 import React from 'react';
 import Banner from '../components/Banner';
+import banner1 from '../assets/images/banner1.jpg'
+import about from '../assets/images/about.jpg'
+import { NavLink } from 'react-router-dom';
 
 const AboutUsPage = () => {
   const breadcrumb = [
@@ -11,7 +14,7 @@ const AboutUsPage = () => {
     <div>
       {/* Banner Section */}
       <Banner
-        image="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+        image={banner1}
         title="About Us"
         breadcrumb={breadcrumb}
       />
@@ -21,7 +24,7 @@ const AboutUsPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Image */}
           <img
-            src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+            src={about}
             alt="About Us"
             className="rounded-lg shadow-lg object-cover w-full h-96"
           />
@@ -105,9 +108,11 @@ const AboutUsPage = () => {
             Discover how we can make a difference for your logistics needs.
             Connect with us today!
           </p>
-          <button className="bg-primary-100 text-white px-6 py-3 rounded-full font-semibold hover:bg-accent-100 transition-colors">
+          <NavLink
+          to='/contact'
+           className="bg-primary-100 text-white px-6 py-3 rounded-full font-semibold hover:bg-accent-100 transition-colors">
             Contact Us
-          </button>
+          </NavLink>
         </div>
       </div>
     </div>

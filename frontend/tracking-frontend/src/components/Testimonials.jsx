@@ -4,13 +4,17 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
 
+import tes1 from '../assets/images/tes1.jpg'
+import tes2 from '../assets/images/tes2.jpg';
+import tes3 from '../assets/images/tes3.jpg';
+
 const Testimonials = () => {
   const testimonials = [
     {
       id: 1,
       name: 'John Doe',
       role: 'Entrepreneur',
-      image: 'https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp',
+      image: tes1,
       feedback:
         'This courier service is incredible! My packages are always delivered on time with utmost care.',
     },
@@ -18,7 +22,7 @@ const Testimonials = () => {
       id: 2,
       name: 'Jane Smith',
       role: 'Small Business Owner',
-      image: 'https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp',
+      image: tes2,
       feedback:
         'The customer service is excellent. They always respond quickly and ensure smooth delivery.',
     },
@@ -26,7 +30,7 @@ const Testimonials = () => {
       id: 3,
       name: 'David Wilson',
       role: 'Frequent Shipper',
-      image: 'https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp',
+      image: tes3,
       feedback:
         'Reliable and efficient! I highly recommend their services to anyone looking for a trustworthy courier.',
     },

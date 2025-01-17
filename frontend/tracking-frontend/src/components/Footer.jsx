@@ -7,7 +7,7 @@ const Footer = () => {
             {/* Column 1 */}
             <div>
               <h4 className="text-lg font-semibold mb-2">About Us</h4>
-              <h2 className="text-primary-200 text-3xl mb-2 font-bold">USPS</h2>
+              <h2 className="text-primary-200 text-3xl mb-2 font-bold">Priority Mail</h2>
               <p className="text-sm">
                 We are dedicated to providing top-notch services and ensuring customer satisfaction. Explore our services to learn more.
               </p>
@@ -46,14 +46,14 @@ const Footer = () => {
               <p className="text-sm">
                 123 Main Street, Cityville, Country
               </p>
-              <p className="text-sm">Email: info@yourwebsite.com</p>
+              <p className="text-sm">Email: info@prioritymailsolutions.com</p>
               <p className="text-sm">Phone: +123 456 7890</p>
             </div>
           </div>
   
           {/* Footer Bottom */}
           <div className="mt-8 text-center text-sm border-t border-gray-700 pt-4">
-            &copy; {new Date().getFullYear()} USPS. All Rights Reserved.
+            &copy; {new Date().getFullYear()} prioritymailsolutions. All Rights Reserved.
           </div>
         </div>
       </footer>

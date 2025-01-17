@@ -6,11 +6,15 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 
+import banner1 from '../assets/images/banner1.jpg';
+import banner2 from '../assets/images/banner2.jpg';
+import banner3 from '../assets/images/banner3.jpg';
+
 const Hero = () => {
   const slides = [
     {
       id: 1,
-      image: 'https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp',
+      image: banner1,
       title: 'Fast and Reliable Deliveries',
       description: 'Delivering your packages safely and on time, every time.',
       cta1: 'Learn More',
@@ -18,7 +22,7 @@ const Hero = () => {
     },
     {
       id: 2,
-      image: 'https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp',
+      image: banner2,
       title: 'Global Shipping Solutions',
       description: 'Reach anywhere in the world with our seamless shipping services.',
       cta1: 'Track Your Package',
@@ -26,7 +30,7 @@ const Hero = () => {
     },
     {
       id: 3,
-      image: 'https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp',
+      image: banner3,
       title: 'Real-Time Package Tracking',
       description: 'Stay updated on your package\'s location at all times.',
       cta1: 'Track Now',

@@ -2,15 +2,25 @@ import React from 'react';
 import { useState } from 'react';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
+
+import Banner from '../components/Banner';
+import tracking from '../assets/images/online-tracking.jpg'
 
 const Track = () => {
+  const breadcrumb = [
+    { label: 'Home', path: '/' },
+    { label: 'Track & Trace', path: '/track' },
+  ];
   const [trackingNumber, setTrackingNumber] = useState('');
   const [shipmentDetails, setShipmentDetails] = useState(null);
   const [shipmentHistory, setShipmentHistory] = useState([]);
   const [shipmentStatus, setShipmentStatus] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await api.get(`getshipment.php?trackingNumber=${trackingNumber}`);
       if(response.data.success){
@@ -22,11 +32,19 @@ const Track = () => {
       }
     } catch (error) {
       console.error('Error fetching shipment data:', error);
+    } finally{
+      setLoading(false);
     }
   };
   return (
     <>
-      <div className="mt-36 mb-20 mx-auto md:max-w-4xl rounded-lg shadow-lg bg-white">
+      
+      <Banner
+        image={tracking}
+        title="Track & Trace"
+        breadcrumb={breadcrumb}
+      />
+      <div className="mt-10 mb-20 mx-auto md:max-w-4xl rounded-lg shadow-lg bg-white">
       {/* Header */}
       <h2 className="py-8 px-4 font-bold text-2xl text-center text-primary-200">
         Track Your Package
@@ -60,7 +78,8 @@ const Track = () => {
         </h4>
       </form>
       </div>
-      {shipmentDetails &&(
+      {loading && <Spinner loading={true} />}
+      {!loading && shipmentDetails &&(
       <>
         <div className="mt-10 mb-10 mx-auto md:max-w-5xl rounded-lg shadow-lg bg-white">
         <div className="px-6 py-6">

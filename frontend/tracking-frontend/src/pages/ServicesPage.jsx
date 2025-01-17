@@ -2,6 +2,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Banner from '../components/Banner';
 import Services from '../components/Services';
+import imports from '../assets/images/imports.jpg'
+
 
 const ServicesPage = () => {
   const breadcrumb = [
@@ -13,7 +15,7 @@ const ServicesPage = () => {
     <div>
       {/* Banner Section */}
       <Banner
-        image="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
+        image={imports}
         title="Our Services"
         breadcrumb={breadcrumb}
       />

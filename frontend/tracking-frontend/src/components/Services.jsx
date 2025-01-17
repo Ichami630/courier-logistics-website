@@ -1,28 +1,33 @@
 import React from 'react';
 
+import proofofdelivery from '../assets/images/proofofdelivery.jpg';
+import imports from '../assets/images/imports.jpg';
+import freight from '../assets/images/freight.jpg';
+import tracking from '../assets/images/online-tracking.jpg';
+
 const Services = () => {
   const services = [
     {
       id: 1,
-      image: 'https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp',
+      image: freight,
       title: 'Freight',
       description: 'Efficient and secure freight services for all your logistics needs.',
     },
     {
       id: 2,
-      image: 'https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp',
+      image: proofofdelivery,
       title: 'Proof of Delivery',
       description: 'Get real-time proof of delivery for every shipment.',
     },
     {
       id: 3,
-      image: 'https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp',
+      image: imports,
       title: 'Imports',
       description: 'Reliable import solutions tailored to your business.',
     },
     {
       id: 4,
-      image: 'https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp',
+      image: tracking,
       title: 'Online Tracking',
       description: 'Track your shipments online in real time with ease.',
     },
