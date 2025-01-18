@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Generate JWT token
         $payload = [
             'iss' => 'http://tracking-website.local/backend', // Issuer
-            'aud' => 'http://localhost:5173', // Audience
+            'aud' => 'localhost:5173', // Audience
             'iat' => time(), // Issued at
             'exp' => time() + 3600, // Expiry (1 hour)
             'data' => [ // User data

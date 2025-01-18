@@ -22,7 +22,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <NavLink to="/" className="flex items-center">
-              <span className="text-primary-200 text-3xl font-bold">USPS</span>
+              <span className="text-primary-200 text-2xl font-bold">PriorityMail</span>
             </NavLink>
           </div>
 
@@ -30,7 +30,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-primary-200 focus:outline-none"
+              className="text-white hover:text-primary-200 focus:outline-none mr-4"
             >
               <FaBars className="h-6 w-6" />
             </button>

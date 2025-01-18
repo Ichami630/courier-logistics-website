@@ -3,7 +3,8 @@ import axios from 'axios';
 
 // Axios instance for backend communication
 const api = axios.create({
-  baseURL: 'http://tracking-website.local/backend', // Replace with your backend URL
+  baseURL: 'http://tracking-website.local/backend', // Replace offline
+  // baseURL: 'https://prioritymailsolutions.com/backend'
 });
 
 // Include JWT token in Authorization header for protected requests
