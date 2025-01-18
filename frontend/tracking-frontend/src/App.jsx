@@ -15,6 +15,9 @@ import ShipmentForm from './components/admincomponents/ShipmentForm';
 import AllShipments from './pages/admin/AllShipments';
 import Setting from './pages/admin/Setting';
 
+import { useState,useEffect } from 'react';
+import Loader from './assets/loader.svg';
+
 
 // Mock authentication function
 const isAuthenticated = () => {
@@ -63,11 +66,44 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
-  <>
-    <RouterProvider router={router} />
-    <ToastContainer />
-  </>);
+    <>
+      {loading && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+          }}
+        >
+          <img src={Loader} alt="Loading..." style={{ width: '100px', height: '100px' }} />
+        </div>
+      )}
+      {!loading && (
+        <div>
+          <RouterProvider router={router} />
+          <ToastContainer />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default App;
