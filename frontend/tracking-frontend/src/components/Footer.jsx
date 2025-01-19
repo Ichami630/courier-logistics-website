@@ -1,7 +1,7 @@
 const Footer = () => {
     return (
       <footer className="bg-secondary-100 text-white py-8">
-        <div className="container mx-8">
+        <div className="container px-4">
           {/* Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Column 1 */}

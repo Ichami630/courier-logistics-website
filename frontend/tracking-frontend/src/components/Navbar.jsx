@@ -17,7 +17,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-secondary-100 fixed top-0 left-0 w-full z-50">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-2 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
@@ -30,7 +30,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-primary-200 focus:outline-none mr-4"
+              className="text-white hover:text-primary-200 focus:outline-none mx-auto"
             >
               <FaBars className="h-6 w-6" />
             </button>
