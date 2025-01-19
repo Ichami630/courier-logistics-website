@@ -55,18 +55,18 @@ const Track = () => {
         <h4 className="font-semibold text-gray-700 mb-4">Enter Consignment Number</h4>
         
         {/* Input and Button */}
-        <div className="flex items-center gap-4">
+        <div className="block md:flex items-center gap-4">
           <input
             type="text"
             value={trackingNumber}
             onChange={(e) => setTrackingNumber(e.target.value)}
             name="tracking-number"
             placeholder="Enter Tracking Number"
-            className="flex-1 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-100 focus:outline-none"
+            className="flex-1 p-3  w-full md:w-auto rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-100 focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-lg px-4 py-3 font-bold text-white bg-accent-100 hover:bg-primary-100 transition-all"
+            className="rounded-lg mt-4 md:mt-0 w-full md:w-auto px-4 py-3 font-bold text-white bg-accent-100 hover:bg-primary-100 transition-all"
           >
             Track Result
           </button>
@@ -74,7 +74,7 @@ const Track = () => {
         
         {/* Example */}
         <h4 className="font-medium text-sm text-gray-600 mt-4">
-          Ex: 1234
+          Ex: PMS123456789000CARGO
         </h4>
       </form>
       </div>
