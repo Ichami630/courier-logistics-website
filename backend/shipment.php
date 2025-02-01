@@ -49,9 +49,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $time = date('H:i:s',strtotime($data['historyTime']));
     $location = $data['historyLocation'];
     $status = (int)$data['historyStatus'];
+    $latitude = $data['latitude'];
+    $longitude = $data['longitude'];
 
     //if tracking update else create new
-    if(!isset($data['trackingNumber'])){
+    if($data['trackingNumber'] === ''){
         //generate a new tracking number
         $trackingNumber = generateTrackingNumber($conn);
 
@@ -85,8 +87,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 $shipment_id = $conn->insert_id;
 
                 //insert shipment history
-                $stmt = $conn->prepare("INSERT INTO tbl_shipmentHistory(shipment_id ,status_id ,location,date,time) VALUES(?,?,?,?,?)");
-                $stmt->bind_param('iisss',$shipment_id,$status,$location,$date,$time);
+                $stmt = $conn->prepare("INSERT INTO tbl_shipmentHistory(shipment_id ,status_id ,location,date,time,latitude,longitude) VALUES(?,?,?,?,?,?,?)");
+                $stmt->bind_param('iisssdd',$shipment_id,$status,$location,$date,$time,$latitude,$longitude);
                 if($stmt->execute()){
                     $id = $conn->insert_id;
                     echo json_encode(['success' => true, 'message' => 'shipment created successfully']);
@@ -148,8 +150,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             }
 
             // Insert new shipment history
-            $stmt = $conn->prepare("INSERT INTO tbl_shipmentHistory (shipment_id, status_id, location, date, time) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param('iisss', $shipment_id, $status, $location, $date, $time);
+            $stmt = $conn->prepare("INSERT INTO tbl_shipmentHistory (shipment_id, status_id, location, date, time,latitude,longitude) VALUES (?, ?, ?, ?, ?,?,?)");
+            $stmt->bind_param('iisssdd', $shipment_id, $status, $location, $date, $time,$latitude,$longitude);
             if (!$stmt->execute()) {
                 echo json_encode(['success' => false, 'message' => 'Error adding shipment history: ' . $stmt->error]);
                 exit;

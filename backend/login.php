@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         // Generate JWT token
         $payload = [
-            // 'iss' => 'http://tracking-website.local/backend', // Issuer
-            // 'aud' => 'localhost:5173', // Audience
-            'iss' => 'https://prioritymailsolutions.com/backend', // Issuer
-            'aud' => 'https://prioritymailsolutions.com', // Audience
+            'iss' => 'http://tracking-website.local/backend', // Issuer
+            'aud' => 'localhost:5173', // Audience
+            // 'iss' => 'https://prioritymailsolutions.com/backend', // Issuer
+            // 'aud' => 'https://prioritymailsolutions.com', // Audience
             'iat' => time(), // Issued at
             'exp' => time() + 3600, // Expiry (1 hour)
             'data' => [ // User data

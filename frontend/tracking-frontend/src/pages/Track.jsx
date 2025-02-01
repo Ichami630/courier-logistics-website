@@ -1,11 +1,57 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner';
 
+import { MapContainer, TileLayer, Marker, Polyline, Popup, useMap,useMapEvent } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
 import Banner from '../components/Banner';
 import tracking from '../assets/images/online-tracking.jpg'
+
+//custom marker icon
+// Custom marker icons
+const startIcon = new L.Icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png", // Green for start
+  iconSize: [30, 40],
+});
+
+const currentIcon = new L.Icon({
+  iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png", // Red for current location
+  iconSize: [30, 40],
+});
+
+const AutoFitBounds = ({ polylineCoordinates, currentLocation }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (polylineCoordinates.length > 1) {
+      // Fit to all locations
+      const bounds = L.latLngBounds(polylineCoordinates);
+      if (currentLocation) {
+        bounds.extend([currentLocation.latitude, currentLocation.longitude]);
+      }
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [map, polylineCoordinates, currentLocation]);
+
+  return null;
+};
+
+const CenterMapOnStart = ({ startLocation }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (startLocation) {
+      map.setView(startLocation, 9);
+    }
+  }, [map, startLocation]);
+
+  return null;
+};
+
 
 const Track = () => {
   const breadcrumb = [
@@ -16,6 +62,7 @@ const Track = () => {
   const [shipmentDetails, setShipmentDetails] = useState(null);
   const [shipmentHistory, setShipmentHistory] = useState([]);
   const [shipmentStatus, setShipmentStatus] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -27,6 +74,8 @@ const Track = () => {
         setShipmentDetails(response.data.shipmentdetails);
         setShipmentHistory(response.data.shipmenthistory); // Update state here
         setShipmentStatus(response.data.status);
+        const lastLocation = response.data.shipmenthistory[response.data.shipmenthistory.length - 1]; // Get last location
+        setCurrentLocation(lastLocation);
       }else{
         toast.error(response.data.message);
       }
@@ -36,6 +85,8 @@ const Track = () => {
       setLoading(false);
     }
   };
+  //polyline cordinates
+const polylineCoordinates = shipmentHistory.map((loc) => [loc.latitude,loc.longitude]);
   return (
     <>
       
@@ -81,8 +132,56 @@ const Track = () => {
       {loading && <Spinner loading={true} />}
       {!loading && shipmentDetails &&(
       <>
+        <div className="mt-10 mb-10 mx-auto md:max-w-5xl rounded-lg shadow-lg z-0">
+          <MapContainer center={polylineCoordinates[0]} zoom={12} style={{ height: "400px", width: "100%" }}
+            whenCreated={(map) => {
+              if (polylineCoordinates.length === 1) {
+                map.setView(polylineCoordinates[0], 12); // Ensure correct view on single location
+              }
+            }}
+          >
+          {/* OpenStreetMap Tiles */}
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          
+          {/* Auto-fit the map bounds */}
+          <AutoFitBounds polylineCoordinates={polylineCoordinates} currentLocation={currentLocation} />
+
+          {/* Center on start location if only one point exists */}
+          {polylineCoordinates.length === 1 && <CenterMapOnStart startLocation={polylineCoordinates[0]} />}
+
+           {/* Start Marker (Green) */}
+           {shipmentHistory.length > 0 && (
+            <Marker position={polylineCoordinates[0]} icon={startIcon}>
+              <Popup>Start Location</Popup>
+            </Marker>
+          )}
+
+          {/* Current Location Marker (Red) */}
+          {currentLocation && (
+            <Marker position={[currentLocation.latitude, currentLocation.longitude]} icon={currentIcon}>
+              <Popup>
+                <b>Current Location: {currentLocation.location}</b> <br />
+                {currentLocation.city}, {currentLocation.country}
+              </Popup>
+            </Marker>
+          )}
+
+          {/* Polyline for Route
+          <Polyline positions={polylineCoordinates} color="blue" /> */}
+          {/* Dashed Polyline Route */}
+          <Polyline
+            positions={polylineCoordinates}
+            color="blue"
+            weight={4}
+            dashArray="5,10"
+          />
+          </MapContainer>
+        </div>
         <div className="mt-10 mb-10 mx-auto md:max-w-5xl rounded-lg shadow-lg bg-white">
-        <div className="px-6 py-6">
+          <div className="px-6 py-6">
           <div className="mb-6">
             <div className="flex justify-between">
               <h3 className="font-bold text-xl text-primary-200">Shipment Details</h3>
@@ -147,8 +246,9 @@ const Track = () => {
             </div>
           </div>
           </div>
+          </div>
         </div>
-        </div>
+               
         <div className="mt-10 mb-10 mx-auto md:max-w-5xl rounded-lg shadow-lg bg-white">
           <div className="px-6 py-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

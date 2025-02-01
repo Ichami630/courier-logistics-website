@@ -57,6 +57,22 @@ const ShipmentForm = () => {
   //handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault(); 
+    //now we get the coordinates for the location in question
+    const location = formData['historyLocation'];
+    try {
+      const res = await  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`);
+      const data = await res.json();
+      if(data.length > 0){
+        formData['latitude'] = parseFloat(data[0].lat);
+        formData['longitude'] = parseFloat(data[0].lon);
+      }else{
+        toast.error(`Coordinates not found for location: ${location}`);
+        formData['latitude'] = '';
+        formData['longitude'] = '';
+      }
+    } catch (error) {
+      console.error("Geocoding error:", error.message);
+    }
     try {
       const response = await api.post('shipment.php',formData);
       if(response.data.success){
@@ -116,9 +132,8 @@ const ShipmentForm = () => {
                   name={field.name}
                   value={formData[field.name] || ''}
                   onChange={handleChange}
-                  required
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  // required
+                  required
                 />
               </div>
             ))}
@@ -135,9 +150,8 @@ const ShipmentForm = () => {
                   name={field.name}
                   value={formData[field.name] || ''}
                   onChange={handleChange}
-                  required
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  // required
+                  required
                 />
               </div>
             ))}
@@ -154,9 +168,8 @@ const ShipmentForm = () => {
                     name={field.name}
                     onChange={handleChange}
                     value={formData[field.name] || ''}
-                    required
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                    // required
+                    required
                   >
                     <option value="">Select {field.label}</option>
                     {/* Dynamically get the corresponding state using field.table */}
@@ -174,7 +187,6 @@ const ShipmentForm = () => {
                     value={formData[field.name]}
                     required
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                    // required
                   />
                 ) : (
                   <input
@@ -183,7 +195,7 @@ const ShipmentForm = () => {
                     value={formData[field.name] || ''}
                     onChange={handleChange}
                     className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                    // required
+                    required
                   />
                 )}
               </div>
@@ -209,9 +221,8 @@ const ShipmentForm = () => {
                 <select
                   name={field.name}
                   onChange={handleChange}
-                  required
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  // required
+                  required
                 >
                   <option value="">Select {field.label}</option>
                   {Array.isArray(eval(field.table)) &&
@@ -228,7 +239,7 @@ const ShipmentForm = () => {
                   name={field.name}
                   onChange={handleChange}
                   className="w-full p-2 mt-1 border rounded-lg focus:outline-primary-100"
-                  // required
+                  required
                 />
               )}
             </div>

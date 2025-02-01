@@ -47,7 +47,7 @@ if(isset($_GET['trackingNumber'])){
     $result = $stmt->get_result()->fetch_assoc();
 
     // Query for shipment history
-    $historySql = "SELECT sh.location, ss.name AS status, sh.created_at FROM tbl_shipmentHistory sh
+    $historySql = "SELECT sh.location, ss.name AS status,sh.latitude,sh.longitude, sh.created_at FROM tbl_shipmentHistory sh
     JOIN tbl_shipment s ON sh.shipment_id = s.shipment_id 
     JOIN lkup_shipmentStatus ss ON sh.status_id = ss.id 
     WHERE s.tracking_number = ? 
