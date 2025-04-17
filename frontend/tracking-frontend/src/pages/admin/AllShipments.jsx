@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import { useState,useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import api from "../../utils/api";
 import { toast } from "react-toastify";
@@ -117,7 +117,7 @@ const AllShipments = () => {
                 </tr>
               ))): (
               <tr>
-                 <td colSpan="5" className="text-center text-red-600 py-3">
+                 <td colSpan="5" className="py-3 text-center text-red-600">
                   ** No shipment Found **
                 </td>
               </tr>

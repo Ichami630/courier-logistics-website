@@ -11,6 +11,7 @@ import ServicesPage from './pages/ServicesPage';
 import AboutUsPage from './pages/AboutUsPage';
 import LoginPage from './pages/admin/LoginPage'; // Import your login page
 import Dashboard from './pages/admin/Dashboard';
+import Profile from './pages/admin/Profile';
 import ShipmentForm from './components/admincomponents/ShipmentForm';
 import AllShipments from './pages/admin/AllShipments';
 import Setting from './pages/admin/Setting';
@@ -59,6 +60,7 @@ const router = createBrowserRouter(
         <Route path="shipment/new-shipment" element={<ShipmentForm />} />
         <Route path="shipment/edit/:trackingNumber" element={<ShipmentForm />} />
         <Route path="settings" element={<Setting />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </>
